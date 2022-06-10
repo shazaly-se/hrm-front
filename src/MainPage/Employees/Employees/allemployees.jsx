@@ -1,40 +1,40 @@
 
-import React , {useEffect,useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios'
 import { baseUrl, baseUrlImage } from '../../../Entryfile/BaseUrl';
 
-import { Grid } from  'react-loader-spinner'
+import { Grid } from 'react-loader-spinner'
 const AllEmployees = () => {
-  const [isLoading,setIsLoading] = useState(false);
-  const [employees,setEmployees] = useState([]);
-  const [designations,setDesignations] = useState([]);
-  const [selecteddesignation,setSelectedDesignation] = useState(0);
-  const [searchedName,setSearchedName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [employees, setEmployees] = useState([]);
+  const [designations, setDesignations] = useState([]);
+  const [selecteddesignation, setSelectedDesignation] = useState(0);
+  const [searchedName, setSearchedName] = useState("");
 
 
-    useEffect( ()=>{
-      if($('.select').length > 0) {
-        $('.select').select2({
-          minimumResultsForSearch: -1,
-          width: '100%'
-        });
-      }
-    });  
+  useEffect(() => {
+    if ($('.select').length > 0) {
+      $('.select').select2({
+        minimumResultsForSearch: -1,
+        width: '100%'
+      });
+    }
+  });
 
-    useEffect(() =>{
-      setIsLoading(true)
-      async function fetchData(){
-          const request = await axios.get(baseUrl+"employees");
-          setEmployees(request.data.employees);
-          setDesignations(request.data.designations)
-          setIsLoading(false)
-          return request;
-      }
-      fetchData();
-  },[]);
+  useEffect(() => {
+    setIsLoading(true)
+    async function fetchData() {
+      const request = await axios.get(baseUrl + "employees");
+      setEmployees(request.data.employees);
+      setDesignations(request.data.designations)
+      setIsLoading(false)
+      return request;
+    }
+    fetchData();
+  }, []);
 
-  const searchByName = (e)=>{
+  const searchByName = (e) => {
     e.preventDefault();
     setSearchedName(e.target.value)
 
@@ -50,48 +50,48 @@ const AllEmployees = () => {
 
   // }
 
-  const handleSearch =(e) =>{
+  const handleSearch = (e) => {
     e.preventDefault();
-    const data = {searchedName:searchedName,searchedDesignation:selecteddesignation}
+    const data = { searchedName: searchedName, searchedDesignation: selecteddesignation }
 
-    
+
 
     setIsLoading(true)
-    async function searchData(){
-      const request = await axios.post(baseUrl+"searchEmployee",data);
-  
+    async function searchData() {
+      const request = await axios.post(baseUrl + "searchEmployee", data);
+
       setEmployees(request.data.employees);
       setIsLoading(false)
-     
+
       return request;
-  }
-  searchData();
+    }
+    searchData();
 
     // axios.post("http://10.39.1.76/AccountsSoftware/public/api/searchEmployee",data)
     // .then(res=> setEmployees(res.data))
   }
 
-  const handleDesignation = (e) =>{
+  const handleDesignation = (e) => {
 
     setSelectedDesignation(e.target.value)
   }
- const onDeleteEmployee =(record) => {
- 
-     // setDepartment(pre=>{
-     // return pre.filter(department=> department.id != record.id)
-     // })
-     // department=>department.id !=record)
-     axios.delete(baseUrl+"employees/"+ record)
-     .then(res => {
+  const onDeleteEmployee = (record) => {
+
+    // setDepartment(pre=>{
+    // return pre.filter(department=> department.id != record.id)
+    // })
+    // department=>department.id !=record)
+    axios.delete(baseUrl + "employees/" + record)
+      .then(res => {
         window.location.reload()
         console.log("deleted the departement successfully", res.data);
 
-     })
+      })
 
-}
+  }
 
-      return ( 
-      <div className="page-wrapper">
+  return (
+    <div className="page-wrapper">
 
       {/* Page Content */}
       <div className="content container-fluid">
@@ -123,65 +123,65 @@ const AllEmployees = () => {
               <label className="focus-label">Employee ID</label>
             </div>
           </div> */}
-          <div className="col-sm-6 col-md-6">  
+          <div className="col-sm-6 col-md-6">
             <div className="form-group form-focus">
               <input type="text" className="form-control floating" onChange={searchByName} />
               <label className="focus-label">Employee Name</label>
             </div>
           </div>
-          <div className="col-sm-6 col-md-3"> 
+          <div className="col-sm-6 col-md-3">
             <div className="form-group form-focus select-focus">
-              <select className=" form-control" onChange={handleDesignation}> 
-              <option value="0">Select Designation</option>
-              {designations.map((designation)=>(
-               <option value={designation.id}>{designation.designationName}</option>
-              ))}
-                
-              
-             
+              <select className=" form-control" onChange={handleDesignation}>
+                <option value="0">Select Designation</option>
+                {designations.map((designation) => (
+                  <option value={designation.id}>{designation.designationName}</option>
+                ))}
+
+
+
               </select>
               <label className="focus-label">Designation</label>
             </div>
           </div>
-          <div className="col-sm-6 col-md-3">  
-            <a onClick={handleSearch} className="btn btn-success btn-block w-100"> Search </a>  
+          <div className="col-sm-6 col-md-3">
+            <a onClick={handleSearch} className="btn btn-success btn-block w-100"> Search </a>
           </div>
         </div>
         {/* Search Filter */}
-        {isLoading?<div style={{justifyContent:'center',display:'flex',alignItems:'center',height:'500px',verticalAlign:'middle'}}><Grid
-  //  height="100"
-    width="100"
-    color='#00c5fb'
-    ariaLabel='loading'
-  /></div>:<>
-        {employees.length > 0 ?
-        <div className="row staff-grid-row">
-        {employees.map((employee) =>(  
-         
-          <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3" >
-             <Link to={"/app/viewemployee/"+employee.id}>
-            <div className="profile-widget" >
-              <div className="profile-img">
-                <Link  to={"/app/viewemployee/"+employee.id} className="avatar" src><img src={baseUrlImage+"uploads/profiles/"+employee.image} style={{height:'80px'}} alt="" /></Link>
-              </div>
-              <div className="dropdown profile-action">
-                <a href="#" className="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
-                <div className="dropdown-menu dropdown-menu-right">
-                  <Link className="dropdown-item" to={"/app/editemployee/"+employee.id} ><i className="fa fa-pencil m-r-5" /> Edit</Link>
-                  <a className="dropdown-item" href="#" onClick={()=>{onDeleteEmployee(employee.id)}}><i className="fa fa-trash-o m-r-5" /> Delete</a>
+        {isLoading ? <div style={{ justifyContent: 'center', display: 'flex', alignItems: 'center', height: '500px', verticalAlign: 'middle' }}><Grid
+          //  height="100"
+          width="100"
+          color='#00c5fb'
+          ariaLabel='loading'
+        /></div> : <>
+          {employees.length > 0 ?
+            <div className="row staff-grid-row">
+              {employees.map((employee) => (
+
+                <div className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3" >
+                  <Link to={"/app/viewemployee/" + employee.id}>
+                    <div className="profile-widget" >
+                      <div className="profile-img">
+                        <Link to={"/app/viewemployee/" + employee.id} className="avatar" src><img src={baseUrlImage + "uploads/profiles/" + employee.image} style={{ height: '80px' }} alt="" /></Link>
+                      </div>
+                      <div className="dropdown profile-action">
+                        <a href="#" className="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i className="material-icons">more_vert</i></a>
+                        <div className="dropdown-menu dropdown-menu-right">
+                          <Link className="dropdown-item" to={`/app/editemployee/${employee?.id ? employee.id : ''}`} ><i className="fa fa-pencil m-r-5" /> Edit</Link>
+                          <a className="dropdown-item" href="#" onClick={() => { onDeleteEmployee(employee.id) }}><i className="fa fa-trash-o m-r-5" /> Delete</a>
+                        </div>
+                      </div>
+                      <h4 className="user-name m-t-10 mb-0 text-ellipsis"><Link to={"/app/viewemployee/" + employee.id}>{employee.fullname}</Link></h4>
+                      <div className="small text-muted">{employee.designationName}</div>
+                      <div className="small text-muted "><span className='m-1'>Email: {employee.employeeEmail}</span>  |  <span className='m-1'>Phone: {employee.employeephone}</span></div>
+                    </div>
+                  </Link>
                 </div>
-              </div>
-              <h4 className="user-name m-t-10 mb-0 text-ellipsis"><Link to={"/app/viewemployee/"+employee.id}>{employee.fullname}</Link></h4>
-              <div className="small text-muted">{employee.designationName}</div>
-              <div className="small text-muted "><span className='m-1'>Email: {employee.employeeEmail}</span>  |  <span className='m-1'>Phone: {employee.employeephone}</span></div>
-            </div>
-            </Link>
-          </div>
-          
-        ))}
- 
-        </div>:<h3>no data</h3>}</>}
-    
+
+              ))}
+
+            </div> : <h3>no data</h3>}</>}
+
 
       </div>
       {/* /Page Content */}
@@ -234,13 +234,13 @@ const AllEmployees = () => {
                       <input className="form-control" type="password" />
                     </div>
                   </div>
-                  <div className="col-sm-6">  
+                  <div className="col-sm-6">
                     <div className="form-group">
                       <label className="col-form-label">Employee ID <span className="text-danger">*</span></label>
                       <input type="text" className="form-control" />
                     </div>
                   </div>
-                  <div className="col-sm-6">  
+                  <div className="col-sm-6">
                     <div className="form-group">
                       <label className="col-form-label">Joining Date <span className="text-danger">*</span></label>
                       <div><input className="form-control datetimepicker" type="date" /></div>
@@ -527,13 +527,13 @@ const AllEmployees = () => {
                       <input className="form-control" defaultValue="johndoe" type="password" />
                     </div>
                   </div>
-                  <div className="col-sm-6">  
+                  <div className="col-sm-6">
                     <div className="form-group">
                       <label className="col-form-label">Employee ID <span className="text-danger">*</span></label>
                       <input type="text" defaultValue="FT-0001" readOnly className="form-control floating" />
                     </div>
                   </div>
-                  <div className="col-sm-6">  
+                  <div className="col-sm-6">
                     <div className="form-group">
                       <label className="col-form-label">Joining Date <span className="text-danger">*</span></label>
                       <div><input className="form-control datetimepicker" type="date" /></div>
@@ -797,7 +797,7 @@ const AllEmployees = () => {
       </div>
       {/* /Delete Employee Modal */}
     </div>
-        );
-  }
+  );
+}
 
 export default AllEmployees;

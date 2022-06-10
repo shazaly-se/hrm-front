@@ -30,7 +30,7 @@ import EditEmployee from '../MainPage/Employees/Employees/editemployee';
 import ViewEmployee from '../MainPage/Employees/Employees/Viewemployee';
 import AttendanceAll from '../MainPage/Employees/Employees/attendanceall';
 
-export default [  
+export default [
    {
       path: 'main',
       component: Dashboard
